@@ -28,60 +28,113 @@ INF = int(1e9)
 n, v = map(int, input().split()) # 노드, 간선
 start = int(input())             # 시작점
 
-# 1 2 2 -> 1에서 2로 가는 간선의 길이는 2라는 뜻
 graph = [[] for _ in range(n+1)]
 for _ in range(v):
-    nodeFrom, nodeTo, length = map(int, input().split())
-    graph[nodeFrom].append((nodeTo, length))
+    nodeFrom, nodeTo, dist = map(int, input().split())
+    graph[nodeFrom].append((nodeTo, dist))
 
-# 최단거리를 저장할 리스트
 distance = [INF] * (n + 1)
-
-# 방문 여부를 저장할 리스트
 visited = [False] * (n + 1)
 
-def getShortestNode():
-    idx = 0
-    minValue = INF
+def findShortestDist():
+    minDist = INF
+    minDistNodeIdx = 0
 
-    for i in range(1, n+1):
-        if distance[i] < minValue and not visited[i]:
-            minValue = distance[i]
-            idx = i
+    for idx in range(1, n + 1):
+        if distance[idx] < minDist and not visited[idx]:
+            minDist = distance[idx]
+            minDistNodeIdx = idx
     
-    return idx
-
-print(graph)
+    return minDistNodeIdx
 
 def dijkstra(start):
-    visited[start] = True
     distance[start] = 0
+    visited[start] = True
 
-    for nodeTo, length in graph[start]:
-        # 일단 시작 노드에 연결된 노드들의 distance 입력(INF보다 더 가까운 거리를 찾았자나~)
-        distance[nodeTo] = length
-    
-    # 이제 노드 n-1개(시작노드 제외) 전체 돌아보자
-    for _ in range(n-1):
-        # 현재 기준 가장 짧고, 방문하지 않은 노드를 찾아
-        currentNode = getShortestNode()
-        visited[currentNode] = True
+    for nextNodeIdx, dist in graph[start]:
+        distance[nextNodeIdx] = dist
 
-        # 이 노드들이 연결된 다음 노드들에 대해서 dist값 갱신해주자
-        for nodeTo, length in graph[currentNode]:
-            # nodeTo로 갈 때, 기존의 distance값이 더 빠른가? 아니면 나를 거쳐가는 게 더 빠른가?
-            cost = length + distance[currentNode]
-            if cost < distance[nodeTo]:
-                distance[nodeTo] = cost
+    for _ in range(n - 1):
+        currentNodeIdx = findShortestDist()
+        visited[currentNodeIdx] = True
 
+        for nextNodeIdx, dist in graph[currentNodeIdx]:
+            cost = distance[currentNodeIdx] + dist
+            if cost < distance[nextNodeIdx]:
+                distance[nextNodeIdx] = cost
 
 dijkstra(start)
 
 for i in range(1, n+1):
-    if distance[i] == INF:
-        print('Infinity', end=" ")
-    else:
-        print(distance[i], end=" ")
+    print('INF' if distance[i] == INF else distance[i], end=" ")
 
+
+
+
+
+
+####################################################
+# import sys
+# input = sys.stdin.readline
+# INF = int(1e9)
+
+# n, v = map(int, input().split()) # 노드, 간선
+# start = int(input())             # 시작점
+
+# # 1 2 2 -> 1에서 2로 가는 간선의 길이는 2라는 뜻
+# graph = [[] for _ in range(n+1)]
+# for _ in range(v):
+#     nodeFrom, nodeTo, length = map(int, input().split())
+#     graph[nodeFrom].append((nodeTo, length))
+
+# # 최단거리를 저장할 리스트
+# distance = [INF] * (n + 1)
+
+# # 방문 여부를 저장할 리스트
+# visited = [False] * (n + 1)
+
+# def getShortestNode():
+#     idx = 0
+#     minValue = INF
+
+#     for i in range(1, n+1):
+#         if distance[i] < minValue and not visited[i]:
+#             minValue = distance[i]
+#             idx = i
+    
+#     return idx
+
+# print(graph)
+
+# def dijkstra(start):
+#     visited[start] = True
+#     distance[start] = 0
+
+#     for nodeTo, length in graph[start]:
+#         # 일단 시작 노드에 연결된 노드들의 distance 입력(INF보다 더 가까운 거리를 찾았자나~)
+#         distance[nodeTo] = length
+    
+#     # 이제 노드 n-1개(시작노드 제외) 전체 돌아보자
+#     for _ in range(n-1):
+#         # 현재 기준 가장 짧고, 방문하지 않은 노드를 찾아
+#         currentNode = getShortestNode()
+#         visited[currentNode] = True
+
+#         # 이 노드들이 연결된 다음 노드들에 대해서 dist값 갱신해주자
+#         for nodeTo, length in graph[currentNode]:
+#             # nodeTo로 갈 때, 기존의 distance값이 더 빠른가? 아니면 나를 거쳐가는 게 더 빠른가?
+#             cost = length + distance[currentNode]
+#             if cost < distance[nodeTo]:
+#                 distance[nodeTo] = cost
+
+
+# dijkstra(start)
+
+# for i in range(1, n+1):
+#     if distance[i] == INF:
+#         print('Infinity', end=" ")
+#     else:
+#         print(distance[i], end=" ")
+##################################################
 
 
